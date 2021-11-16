@@ -1,14 +1,12 @@
 from flask import Flask, render_template, request
 import jsonify
-from pycaret.regression import *
 import pandas as pd
 import requests
 import pickle
 import numpy as np
-import sklearn
-from sklearn.preprocessing import StandardScaler
+import joblib
 app = Flask(__name__)
-model = pickle.load(open('first_assignment.pkl', 'rb'))
+model = pickle.load(open('first_assignment.sav','rb'))
 cols = ['CRIM','ZN','INDUS','CHAS','NOX','RM','AGE','DIS','RAD','TAX','PTRATIO','B','LSTAT']
 @app.route('/',methods=['GET'])
 def Home():
@@ -38,9 +36,8 @@ def predict():
     final_features = np.array([CRIM,ZN,INDUS,CHAS,NOX,RM,AGE,DIS,RAD,TAX,PTRATIO,B,LSTAT])
     data_unseen = pd.DataFrame([final_features],columns=cols)
     data_unseen.reset_index(inplace=True)
-    prediction = predict_model(model,data=data_unseen, round=0)
-    output = float(prediction.Label[0])
-    return render_template('index.html',prediction_text="House price is {}".format(output))
+    prediction = model.predict(data_unseen)
+    return render_template('index.html',prediction_text="House price is {}".format(prediction))
 
 
 
