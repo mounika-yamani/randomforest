@@ -35,7 +35,6 @@ def predict():
     LSTAT = float(request.form['LSTAT'])
     final_features = np.array([CRIM,ZN,INDUS,CHAS,NOX,RM,AGE,DIS,RAD,TAX,PTRATIO,B,LSTAT])
     data_unseen = pd.DataFrame([final_features],columns=cols)
-    data_unseen.reset_index(inplace=True)
     prediction = model.predict(data_unseen)
     return render_template('index.html',prediction_text="House price is {}".format(prediction))
 
